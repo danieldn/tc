@@ -1,0 +1,3 @@
+package mockbar
+
+func Bar() {}

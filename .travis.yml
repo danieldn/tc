@@ -1,0 +1,14 @@
+language: go
+
+os:
+  - linux
+  - osx
+
+git:
+  depth: 1
+
+script:
+- go test -v ./...
+- go build
+
+gobuild_args: -ldflags "-X 'main.version=v0.1.0'"

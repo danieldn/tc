@@ -1,0 +1,3 @@
+package mockfoo
+
+func Foo() {}
