@@ -1,5 +1,5 @@
 # testcolor
-[![Build Status](https://travis-ci.org/danieldn/tc.svg?branch=master)](https://travis-ci.org/danieldn/tc) [![Go Report Card](https://goreportcard.com/badge/github.com/danieldn/tc)](https://goreportcard.com/report/github.com/danieldn/tc)
+[![Build Status](https://travis-ci.org/danieldn/tc.svg?branch=master)](https://travis-ci.org/danieldn/tc) [![Go Report Card](https://goreportcard.com/badge/github.com/danieldn/tc)](https://goreportcard.com/report/github.com/danieldn/tc) [![codecov](https://codecov.io/gh/danieldn/tc/branch/master/graph/badge.svg)](https://codecov.io/gh/danieldn/tc)
 
 tc pretty prints your 'go test' output 
 
