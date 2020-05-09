@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 )
 
 var (
@@ -63,6 +62,35 @@ func newParser(opt *options) parser {
 // normalP implements a normal parser
 type normalP struct{}
 
+// customP implements a custom parser
+type customP struct {
+	opt *options
+}
+
+func runTestColor(p parser, rd io.Reader, wr io.Writer) {
+	// Allocate main buffer
+	buffer := bufio.NewReader(rd)
+
+	// We loop to read and parse input from stdin, line by line until EOF
+	for {
+		// ReadSlice returns of slice of buffer (does not allocate new memory)
+		// and WILL include '\n'
+		buf, err := buffer.ReadSlice('\n')
+		if err != nil {
+			if err == io.EOF {
+				return
+			}
+
+			log.Fatalf("testcolor: Unhandled error reading from stdin! %v", err)
+		}
+
+		// we ditch '\n' in order to annotate properly
+		editedBuf := p.parseBuffer(buf[:len(buf)-1])
+
+		fmt.Fprintf(wr, "%s\n", editedBuf)
+	}
+}
+
 func (p normalP) parseBuffer(buf []byte) []byte {
 	var annotatedSlice []byte
 
@@ -91,7 +119,7 @@ func (p normalP) parseBuffer(buf []byte) []byte {
 		// --- SKIP
 		annotatedSlice = annotateWithColorAndIntent(buf, boldYellow)
 	case bytes.HasPrefix(trimmedBuf, question):
-		// ?   	github.com/danieldn/testcolor/mock/mockbar	[no test files]
+		// ?
 		annotatedSlice = annotateWithColor(buf, cyan)
 	case bytes.Contains(trimmedBuf, underscoreTest):
 		// For lines containing '_test.go' like
@@ -122,11 +150,6 @@ func (p normalP) parseBuffer(buf []byte) []byte {
 	}
 
 	return annotatedSlice
-}
-
-// customP implements a custom parser
-type customP struct {
-	opt *options
 }
 
 func (p customP) parseBuffer(buf []byte) []byte {
@@ -255,31 +278,6 @@ func (p customP) parseBuffer(buf []byte) []byte {
 	return annotatedSlice
 }
 
-func runTestColor(p parser) {
-	// Main buffer
-	buffer := bufio.NewReader(os.Stdin)
-
-	// We loop until EOF, reading and parsing line by line
-	for {
-		// ReadSlice returns of slice of buffer (does not allocate new memory)
-		buf, err := buffer.ReadSlice('\n')
-		if err != nil {
-			if err == io.EOF {
-				return
-			}
-
-			log.Fatalf("testcolor: Unhandled error reading from stdin! %v", err)
-		}
-
-		editedBuf := p.parseBuffer(buf)
-
-		// TODO(Daniel): From observation, it seems that editedBuf is always
-		// newline terminated. Add test to confirm and locate where this is
-		// happening in parseBuffer()
-		fmt.Printf("%s", editedBuf)
-	}
-}
-
 // annotate builds a new slice of bytes with the ANSI escape code corresponding
 // to color followed by text and ending with the reset escape code
 func annotateWithColor(text []byte, color []byte) []byte {
@@ -314,13 +312,13 @@ func annotateWithColorAndIntent(text, color []byte) []byte {
 	return edited.Bytes()
 }
 
-// search performs a pattern search on s for pattern p. It returns a slice of
-// indices where p begins in s, up to n occurrences. It returns nil if no
-// occurrences are found. Negative n value like -1 means find all occurrences.
+// search performs a naive pattern search on s for pattern p. It returns a slice
+// of indices where p begins in s, up to n occurrences (or all if n<0). It
+// returns nil if no occurrences are found.
 //
-// TODO(Daniel): This is a naive implementation, O(nm), which is good enough for
-// our use case. But we could be awesome and shoot for linear time later on with
-// something like KMP
+// TODO(Daniel): The naive implementation seems good enough for our use case.
+// But we could be awesome and shoot for linear time later on with something
+// like KMP
 func search(s, p []byte, n int) []int {
 	var (
 		seen   int

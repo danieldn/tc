@@ -1,0 +1,24 @@
+=== RUN   TestMockSucceed
+    [90mTestMockSucceed: mock_test.go:8: Checking if mocking succeed works[0m
+    [90mTestMockSucceed: mock_test.go:16: Mocking succeed confirmed[0m
+[1;32m--- PASS: TestMockSucceed (0.00s)[0m
+=== RUN   TestMockFail
+    [90mTestMockFail: mock_test.go:23: Got 3 expected 2[0m
+[1;31m--- FAIL: TestMockFail (0.00s)[0m
+=== RUN   TestMockSkip
+    [90mTestMockSkip: mock_test.go:28: skipping this test...[0m
+[1;31m--- SKIP: TestMockSkip (0.00s)[0m
+=== RUN   TestMockSubTest
+=== RUN   TestMockSubTest/one
+    [90mTestMockSubTest/one: mock_test.go:58: Some sample log output from sub test one[0m
+=== RUN   TestMockSubTest/two
+    [90mTestMockSubTest/two: mock_test.go:58: Some sample log output from sub test two[0m
+=== RUN   TestMockSubTest/three
+    [90mTestMockSubTest/three: mock_test.go:58: Some sample log output from sub test three[0m
+[1;32m--- PASS: TestMockSubTest (0.00s)[0m
+[1;32m    --- PASS: TestMockSubTest/one (0.00s)[0m
+[1;32m    --- PASS: TestMockSubTest/two (0.00s)[0m
+[1;32m    --- PASS: TestMockSubTest/three (0.00s)[0m
+[1;31mFAIL[0m
+[1;31mFAIL	github.com/danieldn/tc/mockpkg	0.006s[0m
+[1;31mFAIL[0m

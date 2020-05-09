@@ -14,6 +14,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 // version of testcolor to show in the cli usage message. We assign the value at
@@ -42,12 +43,13 @@ func main() {
 
 	flag.Parse()
 
-	// create a parser that knows how to parse text based on user provided
+	// Create a parser that knows how to parse text based on user provided
 	// options
 	p := newParser(&options{
 		nofmt:   *nofmt,
 		nocolor: *nocolor,
 	})
 
-	runTestColor(p)
+	// Run testcolor with input from os.Stdin and output to os.Stdout
+	runTestColor(p, os.Stdin, os.Stdout)
 }
