@@ -1,8 +1,12 @@
 language: go
 
+go:
+- "1.14"
+
+
 os:
-  - linux
-  - osx
+- linux
+- osx
 
 git:
   depth: 1
